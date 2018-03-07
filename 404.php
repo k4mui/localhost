@@ -9,39 +9,38 @@
 </head>
 <body>
 	<div id="wrap-all">
-		<div id="head">
-			<div id="user-panel" class="bg-wet-asphalt">
+  <div id="head">
+			<div id="user-panel">
 				<div class="row">
+          <ul class="list float-left">
+            <li id="home-link"><i class="fas fa-info-circle"></i> <a href="/">FAQ</a></li>
+            <li id="home-link"><i class="fas fa-question-circle"></i> <a href="/">Help</a></li>
+            <li id="home-link"><i class="fas fa-clipboard"></i> <a href="/">Rules</a></li>
+          </ul>
 					<ul class="list float-right">
 						<?php
-              if ($user->is_admin()) { //admin
-                  echo '<li><i class="fas fa-envelope"></i> <a href="inbox.php">Admin Panel</a></li>';
-              }
-              if ($user->is_mod()) { // mod
-                  echo '<li><i class="fas fa-envelope"></i> <a href="inbox.php">Admin Panel</a></li>';
-              }
-              if ($user->is_anon()) { // anon
-                  echo "<li><i class=\"fas fa-user-plus\"></i> <a href=\"register.php\">Register</a></li>"
-                  .  "<li><i class=\"fas fa-sign-in-alt\"></i> <a href=\"login.php\">Login</a></li>";
-              }
-              if ($user->is_registered()) { // common for registered
-                  echo "<li><i class=\"fas fa-user\"></i> <a href=\"/account.php\">Account</a></li>"
-                  .  "<li><i class=\"fas fa-sign-out-alt\"></i> <a href=\"/logout.php\">Logout</a></li>";
-              }
+            if ($user->is_admin()) { //admin
+              echo '<li><i class="fas fa-envelope"></i> <a href="inbox.php">Admin Panel</a></li>';
+            }
+            if ($user->is_mod()) { // mod
+              echo '<li><i class="fas fa-envelope"></i> <a href="inbox.php">Admin Panel</a></li>';
+            }
+            if ($user->is_anon()) { // anon
+              echo "<li><i class=\"fas fa-user-plus\"></i> <a href=\"/register.php\">Register</a></li>"
+                .  "<li><i class=\"fas fa-sign-in-alt\"></i> <a href=\"/login.php\">Login</a></li>";
+            }
+            if ($user->is_registered()) { // common for registered
+              echo "<li><i class=\"fas fa-user\"></i> <a href=\"/account.php\">Account</a></li>"
+                .  "<li><i class=\"fas fa-sign-out-alt\"></i> <a href=\"/logout.php\">Logout</a></li>";
+            }
             ?>
-						<li></li>
 					</ul>
 				</div> <!-- .row -->
 			</div> <!-- #user-panel -->
 			<div id="site-nav">
 				<div class="row">
-					<div id="nav-links" class="float-left">
-						<span id="site-logo">wheel</span>
-						<a href="">FAQ</a>
-						<a href="">Rules</a>
-						<a href="">Help</a>
-						<a href="">Contact</a>
-					</div>
+          <img id="site-logo" src="/images/shi.png" />
+          <span id="site-title">wheel</span>
 					<div id="site-search" class="float-right">
 						<form class="input-group" action="index.html" method="get">
 							<input type="text" name="_query" placeholder="Search discussions..." />
@@ -53,13 +52,17 @@
 				</div> <!-- .row -->
 			</div> <!-- #site-nav -->
 			<div id="page-title">
-				Error = occured
+        <ul class="list">
+          <li><i class="fas fa-home"></i> <a href="/">Boards Index</a></li>
+        </ul>
 			</div> <!-- #page-title -->
 		</div> <!-- #head -->
 		<div id="body-wrapper">
-     	<div class="row">
-       Sorry your request cannot be fullfilled :)
-			</div>
+      <div id="form-area">
+        <div id="new-discussion">
+          <?php echo $error; ?>
+        </div>
+      </div>
 		</div> <!-- #body-wrapper -->
 		<div id="foot">
 			&copy; 2018 wheel

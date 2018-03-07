@@ -17,8 +17,11 @@ if ($board_id === 0) {
 $data = array();
 $da = new DataAccess;
 $board = $da->get_board($board_id);
+$board = $da->get_board_mysql($board_id);
 if ($board->get_id() === 0) {
-	die("B 0");
+  $error = "The board you are trying to access is not a valid board :(";
+  include("404.php");
+  die();
 }
 unset($da);
 
@@ -67,8 +70,9 @@ unset($da);
           <img id="site-logo" src="/images/shi.png" />
           <span id="site-title">wheel</span>
 					<div id="site-search" class="float-right">
-						<form class="input-group" action="index.html" method="get">
-							<input type="text" name="_query" placeholder="Search discussions..." />
+            <form class="input-group" action="/search.php" method="GET">
+              <input type="text" name="q" placeholder="Search discussions..." />
+              <input type="hidden" name="id" value="-1" />
 							<button type="submit">
 								<i class="fas fa-search"></i>
 							</button>
@@ -80,7 +84,7 @@ unset($da);
         <ul class="list">
           <li><i class="fas fa-home"></i> <a href="/">Boards Index</a></li>
           <li>/</li>
-          <li><i class="fas fa-user-plus"></i> <a href="/register.php">Register</a></li>
+          <li><i class="fas fa-<?php echo $board->get_icon(); ?>"></i> <a href="/viewboard.php?id=<?php echo $board->get_id(); ?>">Board: <?php echo $board->get_title(); ?></a></li>
         </ul>
 			</div> <!-- #page-title -->
 		</div> <!-- #head -->
@@ -108,8 +112,9 @@ unset($da);
           ?>
         </ul>
         <div id="board-search" class="float-right">
-          <form class="input-group" action="index.html" method="get">
-            <input type="text" name="query" placeholder="Search this board..." />
+          <form class="input-group" action="/search.php" method="GET">
+            <input type="text" name="q" placeholder="Search this board..." />
+            <input type="hidden" name="id" value="<?php echo $board->get_id(); ?>" />
             <button type="submit">
               <i class="fas fa-search"></i>
             </button>

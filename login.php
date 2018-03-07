@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $u = $da->get_user($email_address);
     if (!$u) {
       $errors[] = "Account does not exist";
-    } else if ($u->get_password() === md5($password)) {
+    } else if ($u->get_password_hash() === md5($password)) {
       $success = True;
       set_user($u);
     } else {
@@ -85,8 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
           <img id="site-logo" src="/images/shi.png" />
           <span id="site-title">wheel</span>
 					<div id="site-search" class="float-right">
-						<form class="input-group" action="index.html" method="get">
-							<input type="text" name="_query" placeholder="Search discussions..." />
+            <form class="input-group" action="/search.php" method="GET">
+              <input type="text" name="q" placeholder="Search discussions..." />
+              <input type="hidden" name="id" value="-1" />
 							<button type="submit">
 								<i class="fas fa-search"></i>
 							</button>

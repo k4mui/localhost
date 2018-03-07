@@ -1,25 +1,24 @@
 <?php
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require "$root/lib/init.php";
-require "$root/lib/pre_processing.php";
-require "$root/lib/validation.php";
+require "$root/lib/db.php";
 
-if ($_SERVER['REQUEST_METHOD'] === "POST") {
-  $email_address = isset($_POST["email_address"]) ? strsanitize($_POST["email_address"]) : NULL;
-  $errors = array();
-  if ($email_address) {
-    check_email_address($email_address, $errors);
-  } else {
-    $errors[] = "Email address is required";
-  }
+if ($_SERVER['REQUEST_METHOD'] !== "GET") {
+	die();
 }
+if (!$user->is_registered()) {
+  $error = "You need to login first";
+  include("404.php");
+  die();
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8">
-	<title>wheel - Forgot Password</title>
+  <title>wheel - My Account</title>
 	<link href="/fonts/font-awesome/css/fontawesome-all.css" rel="stylesheet" type="text/css" />
 	<link href="/styles/wheel.css?v=<?php echo time();?>" rel="stylesheet" type="text/css" />
 </head>
@@ -72,29 +71,40 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         <ul class="list">
           <li><i class="fas fa-home"></i> <a href="/">Boards Index</a></li>
           <li>/</li>
-          <li><i class="fas fa-times"></i> <a href="/reset.php">Reset Password</a></li>
+          <li><i class="fas fa-search"></i> <a href="/user.php?id=<?php echo -1; ?>">My Account</a></li>
         </ul>
 			</div> <!-- #page-title -->
 		</div> <!-- #head -->
 		<div id="body-wrapper">
-	    <div id="form-area">
-        <div id="">
-        <?php
-        if (isset($errors) && $errors) {
-          echo "<div id='errors'>";
-          foreach ($errors as $err) {
-            echo "<div>$err</div>";
-          }
-          echo "</div>";
-        }
-        ?>
+      <div id="boards-section">
+        <div class="card-header">
+          My Account
         </div>
-        <div>
-          <form class="account-form" action="" method="post">
-            Enter the email address of your account, we will send n link to reset your password.<br/>
-            <input type="text" name="email_address" maxlength="254" placeholder="email address" value="<?php echo isset($email_address) ? $email_address : ''; ?>"/><br/>
-            <input type="submit" value="Reset"/>
-          </form>
+        <div class="boards-item">
+          <h3>Statistics</h3>
+          <hr/>
+          <div class="row acc-item">
+            <div class="acc-iteml">Discussions Created:</div> <div class="acc-itemr">23</div>
+          </div>
+          <div class="row acc-item">
+            <div class="acc-iteml">Replies Given:</div> <div class="acc-itemr">23</div>
+          </div>
+          <div class="row acc-item">
+            <div class="acc-iteml">Images Uploaded:</div> <div class="acc-itemr">23</div>
+          </div>
+
+          <br/>
+          <h3>Informations</h3>
+          <hr/>
+          <div class="row acc-item">
+            <div class="acc-iteml">Joined On:</div> <div class="acc-itemr">23rd Oct, 2017</div>
+          </div>
+          <div class="row acc-item">
+            <div class="acc-iteml">Email Address:</div> <div class="acc-itemr">23 (<a href="">change</a>)</div>
+          </div>
+          <div class="row acc-item">
+            <div class="acc-iteml">Password:</div> <div class="acc-itemr">&lt;secret&gt; (<a href="">change</a>)</div>
+          </div>
         </div>
       </div>
 		</div> <!-- #body-wrapper -->

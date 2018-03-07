@@ -2,18 +2,33 @@
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require "$root/lib/init.php";
 require "$root/lib/db.php";
-$board = new board;
-if ($_SERVER['REQUEST_METHOD'] !== "GET") {
-  die("Something is wrong");
-}
-$board_id = isset($_POST["b"]) ? $_POST["b"] : NULL;
-//if ($board_id && board_exists($board_id)) {
-  //
+
+$board = NULL;
+//if ($_SERVER['REQUEST_METHOD'] !== "GET") {
+//	include("404.php");
+//	die();
 //}
-//$data = array();
-//$da = new DataAccess;
-//$da->load_discussions_to_array($board_id, $data);
-//unset($da);
+$title = NULL;
+$content = NULL;
+$image = NULL;
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+	die();
+}
+
+$board_id = isset($_GET["id"]) ? (int)$_GET["id"] : NULL;
+if ($board_id === 0) {
+  die("Wrong board id");
+}
+
+$data = array();
+$da = new DataAccess;
+$board = $da->get_board($board_id);
+if ($board->get_id() === 0) {
+  $error = "The board you are trying to access is not a valid board :(";
+  include("404.php");
+  die();
+}
+unset($da);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -60,8 +75,9 @@ $board_id = isset($_POST["b"]) ? $_POST["b"] : NULL;
           <img id="site-logo" src="/images/shi.png" />
           <span id="site-title">wheel</span>
 					<div id="site-search" class="float-right">
-						<form class="input-group" action="index.html" method="get">
-							<input type="text" name="_query" placeholder="Search discussions..." />
+            <form class="input-group" action="/search.php" method="GET">
+              <input type="text" name="q" placeholder="Search discussions..." />
+              <input type="hidden" name="id" value="-1" />
 							<button type="submit">
 								<i class="fas fa-search"></i>
 							</button>
@@ -73,67 +89,27 @@ $board_id = isset($_POST["b"]) ? $_POST["b"] : NULL;
         <ul class="list">
           <li><i class="fas fa-home"></i> <a href="/">Boards Index</a></li>
           <li>/</li>
-          <li><i class="fas fa-times"></i> <a href="/reset.php">Reset Password</a></li>
+          <li><i class="fas fa-<?php echo $board->get_icon(); ?>"></i> <a href="/viewboard.php?id=<?php echo $board->get_id(); ?>">Board: <?php echo $board->get_title(); ?></a></li>
+          <li>/</li>
+          <li><i class="fas fa-file"></i> <a href="/newdiscussion.php?id=<?php echo $board->get_id(); ?>">New Discussion</a></li>
         </ul>
 			</div> <!-- #page-title -->
 		</div> <!-- #head -->
 		<div id="body-wrapper">
-			<div class="row">
-					<div id="body-left" class="float-left">
-            <div id="form-area">
-              <div id="new-discussion">
-                <form class="account-form" action="" method="post">
-                  Title:<br/>
-                  <input type="text" name="title" maxlength="254" value=""/><br/>
-                  Content:<br/>
-                  <textarea name="full_text" rows="16"></textarea><br/>
-                  Attachment:<br/>
-                  <input type="file" name="image" accept="image/*" /><br/>
-                  <br/>
-                  <input type="submit" value="Post"/>"
-                </form>
-              </div>
-					  </div>
-          </div>
-					<div id="body-right">
-						<div class="card-header">Recent Posts</div>
-						<div id="recent-posts">
-							<div class="recent-item">
-								<img class="top" src="/images/kakashi.jpg">
-								<div class="recent-info">
-									<div class="boards-recent-title">
-										<a href="viewboard.php?id=1">Re: Shiva's guard oero untet oehtoeipoetuietueitueitueiueirueirueiruieruier uieruier</a>
-									</div>
-									<div class="boards-stats">
-										Today at 2pm
-									</div> <!-- .boards-stats -->
-									<div class="boards-stats">
-										<a href="">Programming</a>
-									</div>
-								</div>
-							</div> <!-- .recent-item -->
-						</div>
-						<div class="card-header">Statistics</div>
-						<div id="stats">
-							<div class="stats-item">
-								<span class="stats-left">Total Discussions:</span>
-								<span class="stats-right">23,444</span>
-							</div>
-							<div class="stats-item">
-								<span class="stats-left">Total Replies:</span>
-								<span class="stats-right">23,444</span>
-							</div>
-							<div class="stats-item">
-								<span class="stats-left">Total Images:</span>
-								<span class="stats-right">23,444</span>
-							</div>
-							<div class="stats-item">
-								<span class="stats-left">Total Content:</span>
-								<span class="stats-right">23GB</span>
-							</div>
-						</div>
-					</div>
-			</div>
+      <div id="form-area">
+        <div id="new-discussion">
+          <form class="account-form" action="" method="post">
+            Title:<br/>
+            <input type="text" name="title" maxlength="254" value=""/><br/>
+            Content:<br/>
+            <textarea name="full_text" rows="16"></textarea><br/>
+            Attachment:<br/>
+            <input type="file" name="image" accept="image/*" /><br/>
+            <br/>
+            <input type="submit" value="Post"/>
+          </form>
+        </div>
+      </div>
 		</div> <!-- #body-wrapper -->
 		<div id="foot">
 			&copy; 2018 wheel

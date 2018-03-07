@@ -4,10 +4,6 @@ require_once(__DIR__."/../models/board.php");
 
 class DataAccess
 {
-  private $server;
-  private $username;
-  private $password;
-  private $db_name;
   private $conn;
   private $users_txt_file;
   private $boards_xml_file;
@@ -15,13 +11,30 @@ class DataAccess
 
   function __construct()
   {
+    $server = "localhost";
+    $un = "root";
+    $pwd = "555137";
+    $db = "wheel_3";
+    try {
+      $this->conn = new PDO("mysql:host=$server;dbname=$db", $un, $pwd);
+      $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (Exception $e) {
+      $this->conn = null;
+      echo 'Caught exception: ',  $e->getMessage(), "\n";
+    }
     $this->users_txt_file = "/home/mutter101/development/massc/files/users.txt";
     $this->boards_xml_file = "/home/mutter101/development/massc/files/boards.xml";
     $this->discussions_xml_file = "/home/mutter101/development/massc/files/discussions.xml";
   }
   function __destruct() {
+    $this->conn = NULL;
   }
-  public function connect() {
+  public function get_board_mysql($board_id) {
+    $stmt = $conn->prepare("SELECT * FROM boards WHERE id = :id");
+    $stmt->bindParam(':id', $board_id);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    var_dump($row);
   }
   public function insert_user($email_address, $password) {
     if (!$this->user_exists($email_address)) {
@@ -79,21 +92,6 @@ class DataAccess
         "post_count" => 0,
         "image_count" => 0
       );
-    }
-  }
-  public function load_discussions_to_array($board_id, & $data) {
-    $xml = simplexml_load_file($this->discussions_xml_file) or die("Cannot load xml");
-    foreach ($xml->discussion as $d) {
-      if ((string)$d->board_id == $board_id) {
-        $data[(string)$d->discussion_id] = array(
-          "discussion_title" => (string)$d->discussion_title,
-          "creation_timestamp" => (string)$d->creation_timestamp,
-          "last_post_timestamp" => (string)$d->last_post_timestamp,
-          "reply_count" => (string)$d->reply_count,
-          "image_count" => (string)$d->image_count,
-          "full_text" => (string)$d->full_text
-        );
-      }
     }
   }
   public function get_board($board_id) {
