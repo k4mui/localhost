@@ -37,8 +37,16 @@ function random_quote() {
   });
 }
 
+
 $(document).ready(() => {
   addEvent(window, 'resize', _sizing);
-  $('#input').keydown(_keydown);
-  random_quote();
+  $('img#eye').hover(() => {
+    $('img#eye').css("transform", "rotate(720deg)");
+    $('img#eye').attr("src", "images/ims-1.png");
+    $('img#eye').css("transform", "rotate(360deg)");
+  }, () => {
+    $('img#eye').css("transform", "rotate(-360deg)");
+    $('img#eye').attr("src", "images/Sharingan.png");
+    $('img#eye').css("transform", "rotate(-720deg)");
+  });
 });

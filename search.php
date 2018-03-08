@@ -32,6 +32,10 @@ if ($board_id === 0) {
 <head>
 	<meta charset="utf-8">
   <title>wheel - Search Results</title>
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon/favicon.ico" />
 	<link href="/fonts/font-awesome/css/fontawesome-all.css" rel="stylesheet" type="text/css" />
 	<link href="/styles/wheel.css?v=<?php echo time();?>" rel="stylesheet" type="text/css" />
 </head>

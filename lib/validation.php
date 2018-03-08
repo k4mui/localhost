@@ -24,4 +24,30 @@ function check_email_address($email, & $errors) {
     $errors[] = "$email is not a valid email address.";
   }
 }
+function check_discussion_title($title, & $errors) {
+  $len = strlen($title);
+  if ($len < 8) {
+    $errors[] = "Title must be at least 8 characters long";
+  } else if ($len > 256) {
+    $errors[] = "Title must be at most 256 characters long";
+  }
+}
+function check_discussion_text($text, & $errors) {
+  $len = strlen($text);
+  if ($len < 24) {
+    $errors[] = "Discussion content must be at least 24 characters long.";
+  } else if ($len > 32768) {
+    $errors[] = "Discussion content must be at most 32,768 characters long.";
+  }
+}
+function check_discussion_attachment($image, & $errors) {
+  if ($image["tmp_name"]) {
+    $size = getimagesize($image["tmp_name"]);
+    if ($size == False) {
+      $errors[] = "The attachment is invalid.";
+    }
+  } else {
+    $errors[] = "A relevant image must be attached.";
+  }
+}
 ?>

@@ -51,6 +51,7 @@ span#site-logo{font-size:32px;text-decoration:overline;}
 
 div.acc-item{border-bottom: 1px solid #aaaaaa;margin: 6px 0 6px 10px;padding: 6px 2px;}
 
+#body-left>#boards-section{margin:0;}
 .acc-iteml{color:#888888;float:left;width:148px;}
 .acc-itemr{float: left;}
 .account-form>input[type=text],.account-form>input[type=password]{font-size:14px;border:1px solid #d1d1d1;padding:4px 8px;margin-bottom:8px;}
@@ -69,11 +70,11 @@ div.boards-recent{float:right;margin-left:4px;overflow:hidden;width:440px;white-
 div.boards-recent-info{float:right;margin-left:8px;margin-top:3px;width:384px;}
 div.boards-recent-title{overflow:hidden;text-overflow:ellipsis}
 div.boards-stats{font-size:12px}
-div.boards-title{float:left;margin-left:4px;width:436px;}
+div.boards-title{float:left;margin-left:4px;width:424px;}
 div.card-body{background-color:#fcfcff;border-bottom:1px solid#d1d1d1;margin-bottom:10px;padding:10px 4px}
 div.card-header{background-color:#3C8DBC;color:#ffffff;font-size:20px;font-weight:bold;padding:10px 8px;width:100%;}
-div.discussions-recent{float:left;margin-left:4px;overflow:hidden;width:266px;white-space:nowrap;}
-div.discussions-stats{float:left;margin-left:4px;overflow:hidden;width:176px;white-space:nowrap}
+div.discussions-recent{float:left;margin-left:4px;overflow:hidden;width:238px;white-space:nowrap;margin-top: 2px}
+div.discussions-stats{float:left;margin-left:4px;overflow:hidden;width:176px;white-space:nowrap;margin-top:2px}
 div.discussions-title{float:left;margin-left:4px;width:442px;}
 div.recent-info{margin-left:58px;overflow:hidden;white-space:nowrap}
 div.recent-item{background-color:#fcfcff;border-bottom:1px solid#d1d1d1;overflow:hidden;padding:8px 8px;position: relative;}

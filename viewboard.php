@@ -3,27 +3,38 @@ $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require "$root/lib/init.php";
 require "$root/lib/db.php";
 
-$board = NULL;
 if ($_SERVER['REQUEST_METHOD'] !== "GET") {
+  $error = "The content you are trying to access is unavailable.";
 	include("404.php");
 	die();
 }
 
+$board = NULL;
 $board_id = isset($_GET["id"]) ? (int)$_GET["id"] : NULL;
 if ($board_id === 0) {
   die("Wrong board id");
 }
 
-$data = array();
+/*$data = array(
+  1 => array(
+    "title" => "choji",
+    "full_text" => "very bereroe oeodjd djgkfg ........................dfdfkjhdjfdjf",
+    "creation_timestamp" => "12",
+    "last_reply_timestamp" => "13",
+    "image_count" => 12,
+    "reply_count" => 14
+  )
+);*/
 $da = new DataAccess;
-$board = $da->get_board($board_id);
 $board = $da->get_board_mysql($board_id);
-if ($board->get_id() === 0) {
+//$board = $da->get_board($board_id);
+unset($da);
+
+if ($board === NULL) {
   $error = "The board you are trying to access is not a valid board :(";
   include("404.php");
   die();
 }
-unset($da);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -32,6 +43,10 @@ unset($da);
 <head>
 	<meta charset="utf-8">
   <title>wheel - <?php echo $board->get_title(); ?></title>
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon/favicon.ico" />
 	<link href="/fonts/font-awesome/css/fontawesome-all.css" rel="stylesheet" type="text/css" />
 	<link href="/styles/wheel.css?v=<?php echo time();?>" rel="stylesheet" type="text/css" />
 </head>
@@ -133,7 +148,7 @@ unset($da);
                     .       "<i class=\"fas fa-" . "user" . "\"></i>"
                     .    "</span>"
                     .    "<div class=\"discussions-title\">"
-                    .      "<h3><a href=\"viewdiscussion.php?id=" . $id . "\">" . $info["discussion_title"] . "</a></h3>"
+                    .      "<h3><a href=\"viewdiscussion.php?id=" . $id . "\">" . $info["title"] . "</a></h3>"
                     .      "<div class=\"\">" . $info["full_text"]
                     .      "</div> <!-- .boards-stats -->"
                     .    "</div>"
@@ -148,9 +163,9 @@ unset($da);
                     .    "<div class=\"discussions-recent\">"
                     .      "<div>"
                     .        "<div class=\"text-right\">"
-                    .          "<span class=\"fg-bright\">Created at:</span> " . $info["creation_timestamp"]
+                    .          "<span class=\"fg-bright\">Created:</span> " . $info["creation_timestamp"]
                     .        "</div>"
-                    .        "<div class=\"text-right\"><span class=\"fg-bright\">Last Post at:</span> " . $info["last_post_timestamp"] . "</div>"
+                    .        "<div class=\"text-right\"><span class=\"fg-bright\">Last Reply:</span> " . $info["last_reply_timestamp"] . "</div>"
                     .      "</div>"
                     .    "</div>"
                     .  "</div> <!-- .boards-item -->";

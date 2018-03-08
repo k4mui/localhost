@@ -9,11 +9,11 @@ class user
 
   function __construct()
   {
-    $this->id = 0; // not logged in
+    $this->id = 1; // not logged in
     $this->role = 0;
   }
   public function logout() {
-    $this->id = 0;
+    $this->id = 1;
     $this->role = 0;
     $this->email = NULL;
     $this->password = NULL;

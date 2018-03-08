@@ -1,7 +1,7 @@
 <?php
 class board
 {
-  private $icon;
+  private $fa_icon;
   private $id;
   private $locked;
   private $title;
@@ -11,11 +11,19 @@ class board
     $this->locked = 0;
     $this->id = 0;
   }
+  public static function with_row(& $row) {
+    $instance = new self();
+    $instance->set_id((int)$row["id"]);
+    $instance->set_icon($row["fa_icon"]);
+    $instance->set_title($row["title"]);
+    $instance->set_locked((int)$row["locked"]);
+    return $instance;
+  }
   public function get_icon() {
-    return $this->icon;
+    return $this->fa_icon;
   }
   public function set_icon($icon) {
-    $this->icon = $icon;
+    $this->fa_icon = $icon;
   }
   public function get_id() {
     return $this->id;

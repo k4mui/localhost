@@ -12,7 +12,8 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #EBEFF5;
+  background-image: url("../../images/svi-c-1.png");
+  background-size: cover;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 a{color:#0077D6;text-decoration: none;}
@@ -58,3 +59,15 @@ div#wrap-head>input{
   padding: 2px 4px;
   width: 100%;
 }
+img.eye {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border-radius: 32px;
+  height: 64px;
+  width: 64px;
+  transition: transform 2s;
+}/*
+img.eye:hover {
+  transform: rotate(1080deg);
+}*/
