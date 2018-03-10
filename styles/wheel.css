@@ -4,17 +4,19 @@ body{background-color:#ECF0F5;color:#210000;font-family:Verdana,Arial,Helvetica,
 a,a:visited{color:#4056a1;text-decoration:none}
 a:hover{text-decoration:underline}
 button[type=submit].btn{cursor:pointer;font-size:14px;padding:4px 8px 4px 4px;}
+img.post-image{max-width: 400px;height:auto;margin-right: 16px;vertical-align: text-top;float:left;}
 img.top{float:left;height:48px;margin-top:4px;vertical-align:text-top;width:48px;}
 img#site-logo{float:left;height:48px;width:48px;margin:8px 0 0 8px;}
 #site-title{float:left;margin-left:8px;font-size:38px;text-decoration: overline}
 
-#boards-section{margin: 6px;}
+#archive-indicator{text-align: center;font-size: 24px;font-weight: bold;padding: 24px;border-top: 1px solid black;border-bottom: 1px solid black; color:red;margin: 10px 0;}
+#boards-section, #replies-section{margin: 6px;}
 #board-statistics-section{margin-bottom:6px}
 #errors{background-color:#ffebec;border:1px solid #eedadb;color:#ab4424;margin-bottom: 12px;padding: 10px;}
 #home-link{margin-left:8px;}
 #new-discussion>form>input[type=text]{padding:8px;width:100%;}
 #new-discussion>form>textarea{border: 1px solid #e1e1e1;font-family:inherit;font-size:14px;margin-bottom:10px;padding:8px;width:100%;}
-#board-statistics-section,#boards-section, #recent-posts-section,#statistics-section,#form-area{box-shadow: -2px 2px 6px 0px #9999dd;}
+#board-statistics-section,#boards-section, #recent-posts-section,#statistics-section,#form-area,#replies-section{box-shadow: -2px 2px 6px 0px #9999dd;}
 #site-nav{color:#e0eaff;background-color:#367fa9;line-height:64px;min-height:64px;box-shadow:0 6px 6px 0 rgba(0, 0, 0, 0.24)}
 #site-nav::after{clear:both;content:"";display:block}
 #success{background-color:#ebffec;border:1px solid #daeedb;color:#44ab24;margin-bottom: 12px;padding: 10px;}
@@ -27,7 +29,7 @@ div#board-search>form>input{line-height:32px;font-size:14px;width:262px}
 div#board-search>form>button{height:32px;width:32px;}
 div#body-left{width:948px;margin-left:6px;margin-bottom:6px;}
 div#body-right{margin-left:980px;margin-right: 6px;}
-div#body-wrapper{}
+div.discussion-head{background-color:#3C8DBC;color:#ffffff;padding:8px;}
 div#foot{background-color:#222D32;color:#ffe5e5;font-size:12px;margin-top:20px;padding: 20px 10px;text-align:center;}
 div#form-area{background-color:#fcfcff;padding:20px 20px;margin: 0 6px 0 6px;}
 div#head{margin-bottom:20px;}
@@ -60,6 +62,7 @@ div.acc-item{border-bottom: 1px solid #aaaaaa;margin: 6px 0 6px 10px;padding: 6p
 .breakword{word-wrap:break-word}
 .btn{padding:2px 8px;}
 .clearfix{clear:both}
+.discussions-title>h3,.discussions-title>div{overflow:hidden;text-overflow: ellipsis;white-space: nowrap;}
 .fas{line-height:1.5}
 .info-text{font-size:12px;}
 .input-group>button[type=submit]{background-color:inherit;cursor:pointer;float:right;}
@@ -73,14 +76,19 @@ div.boards-stats{font-size:12px}
 div.boards-title{float:left;margin-left:4px;width:424px;}
 div.card-body{background-color:#fcfcff;border-bottom:1px solid#d1d1d1;margin-bottom:10px;padding:10px 4px}
 div.card-header{background-color:#3C8DBC;color:#ffffff;font-size:20px;font-weight:bold;padding:10px 8px;width:100%;}
+div.discussion-item{background-color:#fcfcff;border-bottom:1px solid #eeeefa;overflow:hidden;padding:16px;}
 div.discussions-recent{float:left;margin-left:4px;overflow:hidden;width:238px;white-space:nowrap;margin-top: 2px}
 div.discussions-stats{float:left;margin-left:4px;overflow:hidden;width:176px;white-space:nowrap;margin-top:2px}
-div.discussions-title{float:left;margin-left:4px;width:442px;}
+div.discussions-title{float:left;margin-left:12px;width:442px;}
 div.recent-info{margin-left:58px;overflow:hidden;white-space:nowrap}
 div.recent-item{background-color:#fcfcff;border-bottom:1px solid#d1d1d1;overflow:hidden;padding:8px 8px;position: relative;}
+div.reply{box-shadow: -2px 2px 6px 0px #9999dd;margin: 16px 6px 6px 64px;}
+div.reply-body{background-color: #fcfcff;overflow:hidden;padding: 16px;}
+div.reply-head{padding: 8px;background-color: #8e44ad; color: white;}
 div.row{clear:both;overflow:hidden}
 div.stats-item{overflow:hidden}
 i.fa-code{color:#b71540}
+img.board-discussions{border-radius: 24px; width:48px; height:48px;}
 img.recent-img{float:left;height:48px;vertical-align:text-top;width:48px;}
 span.boards-icon{display:block;float:left;font-size:30px;height:48px;text-align:center;width:48px}
 span.boards-icon>i{color:#aaaaaa;}

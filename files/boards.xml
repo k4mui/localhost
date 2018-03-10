@@ -43,18 +43,6 @@
     <locked>0</locked>
   </board>
   <board>
-    <id>8</id>
-    <title>Philosophy</title>
-    <fa_icon>globe</fa_icon>
-    <locked>0</locked>
-  </board>
-  <board>
-    <id>9</id>
-    <title>Paranormal</title>
-    <fa_icon>frown</fa_icon>
-    <locked>0</locked>
-  </board>
-  <board>
     <id>10</id>
     <title>Music</title>
     <fa_icon>music</fa_icon>

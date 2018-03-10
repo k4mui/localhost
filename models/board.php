@@ -5,6 +5,11 @@ class board
   private $id;
   private $locked;
   private $title;
+  private $image_size;
+  private $reply_count;
+  private $discussion_count;
+  private $image_count;
+  private $rules;
 
   function __construct()
   {
@@ -18,6 +23,49 @@ class board
     $instance->set_title($row["title"]);
     $instance->set_locked((int)$row["locked"]);
     return $instance;
+  }
+  public static function with_row_x(& $row) {
+    $instance = new self();
+    $instance->set_id((int)$row["id"]);
+    $instance->set_icon($row["fa_icon"]);
+    $instance->set_title($row["title"]);
+    $instance->set_locked((int)$row["locked"]);
+    $instance->set_image_count($row["image_count_d"]+$row["image_count_r"]);
+    $instance->set_image_size($row["image_size_d"]+$row["image_size_r"]);
+    $instance->set_reply_count($row["reply_count"]);
+    $instance->set_discussion_count($row["discussion_count"]);
+    $instance->set_rules($row["full_text"]);
+    return $instance;
+  }
+  public function get_rules() {
+    return $this->rules;
+  }
+  public function set_rules($r) {
+    $this->rules = $r;
+  }
+  public function get_image_count() {
+    return $this->image_count;
+  }
+  public function set_image_count($ic) {
+    $this->image_count = number_format($ic);
+  }
+  public function get_image_size() {
+    return $this->image_size;
+  }
+  public function set_image_size($is) {
+    $this->image_size = board::human_readable_filesize($is);
+  }
+  public function get_reply_count() {
+    return $this->reply_count;
+  }
+  public function set_reply_count($rc) {
+    $this->reply_count = number_format($rc);
+  }
+  public function get_discussion_count() {
+    return $this->discussion_count;
+  }
+  public function set_discussion_count($dc) {
+    $this->discussion_count = number_format($dc);
   }
   public function get_icon() {
     return $this->fa_icon;
@@ -42,6 +90,15 @@ class board
   }
   public function set_title($title) {
     $this->title = $title;
+  }
+  private static function human_readable_filesize($bytes) {
+    if ($bytes == 0)
+        return "0.00 B";
+
+    $s = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
+    $e = floor(log($bytes, 1024));
+
+    return round($bytes/pow(1024, $e), 2).$s[$e];
   }
 }
 

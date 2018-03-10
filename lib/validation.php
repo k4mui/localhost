@@ -34,13 +34,14 @@ function check_discussion_title($title, & $errors) {
 }
 function check_discussion_text($text, & $errors) {
   $len = strlen($text);
-  if ($len < 24) {
-    $errors[] = "Discussion content must be at least 24 characters long.";
+  if ($len < 12) {
+    $errors[] = "Discussion content must be at least 12 characters long.";
   } else if ($len > 32768) {
     $errors[] = "Discussion content must be at most 32,768 characters long.";
   }
 }
 function check_discussion_attachment($image, & $errors) {
+  print_r($image);
   if ($image["tmp_name"]) {
     $size = getimagesize($image["tmp_name"]);
     if ($size == False) {

@@ -4,43 +4,40 @@ require "$root/lib/init.php";
 require "$root/lib/db.php";
 require "$root/lib/validation.php";
 
-
-$board = NULL;
-$title = NULL;
-$full_text = NULL;
-$image = NULL;
-$errors = array();
-$success = False;
-
-$board_id = isset($_GET["id"]) ? (int)$_GET["id"] : NULL;
-if ($board_id === 0) {
-  die("Wrong board id");
-}
-
-$da = new DataAccess;
-$board = $da->get_board_mysql($board_id);
-unset($da);
-if ($board === NULL) {
-  $error = "The board you are trying to access is not a valid board :(";
+$accepted_methods = array("POST", "GET");
+if (!in_array($_SERVER["REQUEST_METHOD"], $accepted_methods)) {
+  $error = "Invalid request.";
   include("404.php");
   die();
 }
 
+$discussion = NULL;
+$full_text = NULL;
+$image = NULL;
+$image_id = NULL;
+$errors = array();
+$success = False;
+
+
+$discussion_id = isset($_GET["id"]) ? (int)$_GET["id"] : NULL;
+if ($discussion_id === 0) {
+  die("Invalid disucssion id.");
+}
+$da = new DataAccess;
+$discussion = $da->get_discussion_x($discussion_id);
+unset($da);
+if ($discussion === NULL) {
+  $error = "The discussion you are trying to access is not valid";
+  include("404.php");
+  die();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-  if (isset($_POST["title"])) {
-    $title = $_POST["title"];
-  }
   if (isset($_POST["full_text"])) {
     $full_text = $_POST["full_text"];
   }
-  if (isset($_FILES["attachment"])) {
+  if ($_FILES["attachment"]["tmp_name"]) {
     $image = $_FILES["attachment"];
-  }
-  if ($title) {
-    check_discussion_title($title, $errors);
-  } else {
-    $errors[] = "Title cannot be empty";
   }
   if ($full_text) {
     check_discussion_text($full_text, $errors);
@@ -49,23 +46,31 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
   }
   if ($image) {
     check_discussion_attachment($image, $errors);
-  } else {
-    $errors[] = "A relevant image must be attached.";
   }
 	if (count($errors) === 0) {
     //success
     $da = new DataAccess;
-    $image_id = $da->insert_image($image, $user->get_id());
-    if ($image_id) {
-      if ($da->insert_discussion($title, $full_text, $image_id, $user->get_id(), $board->get_id())) {
+    if($image) {
+      $image_id = $da->insert_image($image, $user->get_id());
+      if ($image_id) {
+        if ($da->insert_reply($full_text, $image_id, $user->get_id(), $discussion->get_id())) {
+          $success = True;
+          header("Location: viewboard.php?id=" . $discussion->get_board_id());
+          die();
+        } else {
+          $errors[] = "Cannot create discussion. Please try again later.";
+        }
+      } else {
+        $errors[] = "Image cannot be uploaded. Try again later.";
+      }
+    } else { // no attachment
+      if ($da->insert_reply_l($full_text, $user->get_id(), $discussion->get_id())) {
         $success = True;
-        header("Location: viewboard.php?id=" . $board->get_id());
+        header("Location: viewdiscussion.php?id=" . $discussion->get_id());
         die();
       } else {
         $errors[] = "Cannot create discussion. Please try again later.";
       }
-    } else {
-      $errors[] = "Image cannot be uploaded. Try again later.";
     }
   }
 }
@@ -75,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8">
-  <title>wheel - New Discussion</title>
+  <title>wheel - New Reply</title>
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
@@ -132,9 +137,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         <ul class="list">
           <li><i class="fas fa-home"></i> <a href="/">Boards Index</a></li>
           <li>/</li>
-          <li><i class="fas fa-<?php echo $board->get_icon(); ?>"></i> <a href="/viewboard.php?id=<?php echo $board->get_id(); ?>">Board: <?php echo $board->get_title(); ?></a></li>
+          <li><i class="fas fa-<?php echo $discussion->get_board_icon(); ?>"></i> <a href="/viewboard.php?id=<?php echo $discussion->get_board_id(); ?>">Board: <?php echo $discussion->get_board_title(); ?></a></li>
           <li>/</li>
-          <li><i class="fas fa-file"></i> <a href="/newdiscussion.php?id=<?php echo $board->get_id(); ?>">New Discussion</a></li>
+          <li><i class="fas fa-file"></i> <a href="/viewdiscussion.php?id=<?php echo $discussion->get_id(); ?>"><?php echo $discussion->get_title(); ?></a></li>
+          <li>/</li>
+          <li><i class="fas fa-file"></i> <a href="/newreply.php?id=<?php echo $discussion->get_id(); ?>">New Reply</a></li>
         </ul>
 			</div> <!-- #page-title -->
 		</div> <!-- #head -->
@@ -153,9 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         </div>
         <div id="new-discussion">
           <form class="account-form" action="" method="post" enctype="multipart/form-data">
-            Title:<br/>
-            <input type="text" name="title" maxlength="256" value="<?php echo $title ? $title : ''; ?>"/><br/>
-            Content:<br/>
+            Reply:<br/>
             <textarea name="full_text" rows="16"><?php echo $full_text ? $full_text : ''; ?></textarea><br/>
             Attachment:<br/>
             <input type="file" name="attachment" accept="image/*" /><br/>

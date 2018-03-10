@@ -3,9 +3,21 @@ $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require "$root/lib/init.php";
 require "$root/lib/db.php";
 
+if ($_SERVER["REQUEST_METHOD"] !== "GET") {
+  $error = "Invalid request!";
+  include("404.php");
+  die();
+}
+
 $data = array();
 $da = new DataAccess;
-$da->load_boards_to_array($data);
+//$da->load_boards_to_array($data);
+$stats = $da->get_statistics();
+$rows = $da->get_boards_x();
+$discussions = $da->get_recent_discussions();
+//echo "<pre>";
+//print_r($rows);
+//echo "</pre>";
 unset($da);
 
 ?>
@@ -79,26 +91,26 @@ unset($da);
             <div id="boards-section">
               <div class="card-header">Boards</div>
               <?php
-              foreach ($data as $id => $info) {
+              foreach ($rows as $id => $row) {
                 echo "<div class=\"boards-item\">"
                   .    "<span class=\"boards-icon\">"
-                  .       "<i class=\"fas fa-" . $info["icon"] . "\"></i>"
+                  .       "<i class=\"fas fa-" . $row["fa_icon"] . "\"></i>"
                   .    "</span>"
                   .    "<div class=\"boards-title\">"
-                  .      "<h3><a href=\"viewboard.php?id=" . $id . "\">" . $info["title"] . "</a></h3>"
+                  .      "<h3><a href=\"viewboard.php?id=" . $row["id"] . "\">" . $row["title"] . "</a></h3>"
                   .      "<div class=\"boards-stats\">"
-                  .        "<span class=\"fg-bright\">Discussions:</span> <span class=\"fg-black\">" . $info["discussion_count"] . "</span> ·"
-                  .	       "<span class=\"fg-bright\">Replies:</span> <span class=\"fg-black\">" . $info["post_count"] . "</span> ·"
-                  .        "<span class=\"fg-bright\">Images:</span> <span class=\"fg-black\">" . $info["image_count"] . "</span>"
+                  .        "<span class=\"fg-bright\">Discussions:</span> <span class=\"fg-black\">" . $row["discussion_count"] . "</span> ·"
+                  .	       "<span class=\"fg-bright\">Replies:</span> <span class=\"fg-black\">" . $row["reply_count"] . "</span> ·"
+                  .        "<span class=\"fg-bright\">Images:</span> <span class=\"fg-black\">" . $row["image_count"] . "</span>"
                   .      "</div> <!-- .boards-stats -->"
                   .    "</div>"
                   .    "<div class=\"boards-recent\">"
-                  .      "<img class=\"recent-img\" src=\"/images/Kakashi_Hatake.png\" alt=\"x\"/>"
+                  .      "<img class=\"recent-img\" src=\"/images/usercontents/" . $row["image_filename"] . "\" alt=\"x\"/>"
                   .      "<div class=\"boards-recent-info\">"
                   .        "<div class=\"boards-recent-title\">"
-                  .          "<span class=\"fg-bright\">Recent:</span> <a href=\"\">Re: Verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrry big title33333333333333333333333333333333333</a>"
+                  .          "<span class=\"fg-bright\">Recent:</span> " . ($row["last_discussion_title"] ? "<a href='/viewdiscussion.php?id=" . $row["last_discussion_id"] . "'>" . $row["last_discussion_title"] . "</a>" : "---")
                   .        "</div>"
-                  .        "<div class=\"\"><span class=\"fg-bright\">Posted at:</span> Today at 2Pm</div>"
+                  .        "<div class=\"\"><span class=\"fg-bright\">Posted at:</span> " . ($row["last_discussion_timestamp"] ? $row["last_discussion_timestamp"] : "---") . "</div>"
                   .      "</div>"
                   .    "</div>"
                   .  "</div> <!-- .boards-item -->";
@@ -108,22 +120,25 @@ unset($da);
 					</div>
 					<div id="body-right">
             <div id="recent-posts-section">
-              <div class="card-header">Recent Posts</div>
+              <div class="card-header">Recent Discussions</div>
               <div id="recent-posts">
-                <div class="recent-item">
-                  <img class="top" src="/images/kakashi.jpg">
+              <?php
+              foreach($discussions as $id => $discussion) {
+                echo '<div class="recent-item">
+                  <img class="top" src="/images/usercontents/' . $discussion["filename"] . '">
                   <div class="recent-info">
                     <div class="boards-recent-title">
-                      <a href="viewboard.php?id=1">Re: Shiva's guard oero untet oehtoeipoetuietueitueitueiueirueirueiruieruier uieruier</a>
+                      <a href="viewdiscussion.php?id=' . $discussion["id"] . '">' . $discussion["title"] . '</a>
                     </div>
+                    <div class="boards-stats">' . $discussion["creation_timestamp"] .
+                    '</div> <!-- .boards-stats -->
                     <div class="boards-stats">
-                      Today at 2pm
-                    </div> <!-- .boards-stats -->
-                    <div class="boards-stats">
-                      <a href="">Programming</a>
+                      <a href="/viewboard.php?id=' . $discussion["board_id"] . '">' . $discussion["board_title"] . '</a>
                     </div>
                   </div>
-                </div> <!-- .recent-item -->
+                </div> <!-- .recent-item -->';
+              }
+              ?>
               </div>
             </div> <!-- #recent-posts-section -->
             <div id="statistics-section">
@@ -131,19 +146,19 @@ unset($da);
               <div id="stats">
                 <div class="stats-item">
                   <span class="stats-left">Total Discussions:</span>
-                  <span class="stats-right">23,444</span>
+                  <span class="stats-right"><?php echo $stats["discussion_count"]; ?></span>
                 </div>
                 <div class="stats-item">
                   <span class="stats-left">Total Replies:</span>
-                  <span class="stats-right">23,444</span>
+                  <span class="stats-right"><?php echo $stats["reply_count"]; ?></span>
                 </div>
                 <div class="stats-item">
                   <span class="stats-left">Total Images:</span>
-                  <span class="stats-right">23,444</span>
+                  <span class="stats-right"><?php echo $stats["image_count"]; ?></span>
                 </div>
                 <div class="stats-item">
                   <span class="stats-left">Total Content:</span>
-                  <span class="stats-right">23GB</span>
+                  <span class="stats-right"><?php echo $stats["image_size"]; ?></span>
                 </div>
               </div>
             </div> <!-- #statistics-section -->

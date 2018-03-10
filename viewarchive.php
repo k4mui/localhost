@@ -20,7 +20,7 @@ if ($board_id === 0) {
 $da = new DataAccess;
 //echo "<pre>";
 $board = $da->get_board_x($board_id);
-$rows = $da->get_discussions($board->get_id());
+$rows = $da->get_discussions_a($board->get_id());
 //echo "</pre>";
 //$board = $da->get_board_mysql($board_id);
 //$board = $da->get_board($board_id);
@@ -96,17 +96,19 @@ if ($board === NULL) {
           <li><i class="fas fa-home"></i> <a href="/">Boards Index</a></li>
           <li>/</li>
           <li><i class="fas fa-<?php echo $board->get_icon(); ?>"></i> <a href="/viewboard.php?id=<?php echo $board->get_id(); ?>">Board: <?php echo $board->get_title(); ?></a></li>
+          <li>/</li>
+          <li><i class="fas fa-<?php echo $board->get_icon(); ?>"></i> <a href="/viewarchive.php?id=<?php echo $board->get_id(); ?>">Archive</a></li>
         </ul>
 			</div> <!-- #page-title -->
+      <div id="archive-indicator">
+            You cannot reply to these discussions, they have been archived!
+      </div>
 		</div> <!-- #head -->
 		<div id="body-wrapper">
       <div class="row" id="boards-button-section">
         <ul class="list float-left">
           <?php
           if (!$board->is_locked()) {
-            echo "<li>"
-							.    "<a class=\"btn bg-success fg-white\" href=\"/newdiscussion.php?id=" . $board->get_id() . "\"><i class=\"fas fa-file\"></i> New Discussion</a>"
-							.  "</li>";
 						if ($user->is_admin()) {
 							echo "<li>"
 								.    "<a class=\"btn bg-pomegranate fg-white\" href=\"/lock.php?id=" . $board->get_id() . "\"><i class=\"fas fa-lock\"></i> Lock</a>"
@@ -117,7 +119,7 @@ if ($board === NULL) {
 						echo "<li><a class=\"btn bg-lock fg-white\" href=\"faq.php#locked-board\"><i class=\"fas fa-lock\"></i> Locked</a></li>";
 					}
 					echo "<li>"
-						.    "<a class=\"btn bg-archive fg-white\" href=\"/viewarchive.php?id=" . $board->get_id() . "\"><i class=\"fas fa-file-archive\"></i> View Archive</a>"
+						.    "<a class=\"btn bg-archive fg-white\" href=\"/viewboard.php?id=" . $board->get_id() . "\"><i class=\"fas fa-file-archive\"></i> View Discussions</a>"
 						.  "</li>";
 
           ?>
