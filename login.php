@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
   }
   if (!$errors) {
     $da = new DataAccess;
-    $u = $da->get_user($email_address);
+    $u = $da->get_user_mysql($email_address);
     if (!$u) {
       $errors[] = "Account does not exist";
     } else if ($u->get_password_hash() === md5($password)) {

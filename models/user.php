@@ -46,7 +46,13 @@ class user
     return $this->role;
   }
   public function set_role($role) {
-    $this->role = $role;
+    if ($role == 'normal') {
+      $this->role = 1;
+    } else if ($role == 'moderator') {
+      $this->role = 2;
+    } else {
+      $this->role = 3;
+    }
   }
   public function is_admin() {
     return $this->role == 3;
@@ -59,6 +65,14 @@ class user
   }
   public function is_registered() {
     return $this->role > 0;
+  }
+  public static function with_row($row) {
+    $ins = new self();
+    $ins->set_role($row["role"]);
+    $ins->set_email_address($row["email_address"]);
+    $ins->set_password_hash($row["password_hash"]);
+    $ins->set_id((int)$row["id"]);
+    return $ins;
   }
 }
 

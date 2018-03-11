@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
   }
   if (!$errors) {
     $da = new DataAccess;
-    $success = $da->insert_user($email_address, $password);
+    $success = $da->insert_user_mysql($email_address, $password);
     if (!$success) {
       $errors[] = "An account associated with $email_address already exists.";
     }

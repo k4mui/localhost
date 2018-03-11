@@ -11,7 +11,9 @@ if (!$user->is_registered()) {
   include("404.php");
   die();
 }
-
+$da = new DataAccess;
+$acc = $da->get_account_info($user->get_id());
+//print_r($acc);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -84,26 +86,26 @@ if (!$user->is_registered()) {
           <h3>Statistics</h3>
           <hr/>
           <div class="row acc-item">
-            <div class="acc-iteml">Discussions Created:</div> <div class="acc-itemr">23</div>
+            <div class="acc-iteml">Discussions Created:</div> <div class="acc-itemr"><?php echo $acc["discussion_count"]; ?></div>
           </div>
           <div class="row acc-item">
-            <div class="acc-iteml">Replies Given:</div> <div class="acc-itemr">23</div>
+            <div class="acc-iteml">Replies Given:</div> <div class="acc-itemr"><?php echo $acc["reply_count"]; ?></div>
           </div>
           <div class="row acc-item">
-            <div class="acc-iteml">Images Uploaded:</div> <div class="acc-itemr">23</div>
+            <div class="acc-iteml">Images Uploaded:</div> <div class="acc-itemr"><?php echo (int)$acc["image_count_r"] + (int)$acc["image_count_d"]; ?></div>
           </div>
 
           <br/>
           <h3>Informations</h3>
           <hr/>
           <div class="row acc-item">
-            <div class="acc-iteml">Joined On:</div> <div class="acc-itemr">23rd Oct, 2017</div>
+            <div class="acc-iteml">Joined On:</div> <div class="acc-itemr"><?php echo $acc["joined_on"]; ?></div>
           </div>
           <div class="row acc-item">
-            <div class="acc-iteml">Email Address:</div> <div class="acc-itemr">23 (<a href="">change</a>)</div>
+            <div class="acc-iteml">Email Address:</div> <div class="acc-itemr"><?php echo $user->get_email_address(); ?></div>
           </div>
           <div class="row acc-item">
-            <div class="acc-iteml">Password:</div> <div class="acc-itemr">&lt;secret&gt; (<a href="">change</a>)</div>
+            <div class="acc-iteml">Password:</div> <div class="acc-itemr">&lt;secret&gt;</div>
           </div>
         </div>
       </div>

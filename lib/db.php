@@ -1,6 +1,7 @@
 <?php
 require_once(__DIR__."/../models/board.php");
 require_once(__DIR__."/../models/discussion.php");
+require_once(__DIR__."/../models/user.php");
 
 
 class DataAccess
@@ -46,6 +47,7 @@ class DataAccess
       return False;
     }
   }
+  
   public function insert_reply($full_text, $image_id, $user_id, $discussion_id) {
     try {
       $stmt = $this->conn->prepare("INSERT INTO replies(full_text, author_id, image_id, discussion_id) VALUES(:full, :author, :img, :dis)");
@@ -113,12 +115,44 @@ class DataAccess
       return False;
     }
   }
+  public function insert_user_mysql($email_address, $password) {
+    try {
+      $stmt = $this->conn->prepare("INSERT INTO users(email_address, password_hash) VALUES(:email, :pwd)");
+      $stmt->bindParam(":email", $email_address);
+      $stmt->bindParam(":pwd", $hash);
+      $hash = md5($password);
+      $stmt->execute();
+      return True;
+    } catch(Exception $e) {
+      print_r($e);
+      return False;
+    }
+  }
   public function get_board_mysql($board_id) {
     $stmt = $this->conn->prepare("SELECT * FROM boards WHERE id = :id");
     $stmt->bindParam(':id', $board_id);
     $stmt->execute();
     $row = $stmt->fetch();
     return $row ? board::with_row($row) : NULL;
+  }
+  public function get_user_mysql($email_address) {
+    $stmt = $this->conn->prepare("SELECT * FROM users WHERE email_address = :email");
+    $stmt->bindParam(':email', $email_address);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    return $row ? user::with_row($row) : NULL;
+  }
+  public function get_account_info($user_id) {
+    $sql = "SELECT (SELECT COUNT(*) FROM replies WHERE author_id = :uid) as reply_count,
+                   (SELECT COUNT(*) FROM discussions WHERE author_id = :uid) as discussion_count,
+                   (SELECT COUNT(*) FROM images, replies WHERE replies.author_id = :uid AND replies.image_id = images.id) as image_count_r,
+                   (SELECT COUNT(*) FROM discussions, images WHERE discussions.author_id = :uid AND discussions.image_id = images.id) as image_count_d,
+                   (SELECT registration_timestamp FROM users where id = :uid) as joined_on";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':uid', $user_id);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    return $row;
   }
   public function get_discussion($discussion_id) {
     try {

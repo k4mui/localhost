@@ -2,6 +2,7 @@
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require "$root/lib/init.php";
 require "$root/lib/db.php";
+require "$root/lib/postprocessing.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "GET") {
   $error = "Invalid request!";
@@ -154,11 +155,7 @@ unset($da);
                 </div>
                 <div class="stats-item">
                   <span class="stats-left">Total Images:</span>
-                  <span class="stats-right"><?php echo $stats["image_count"]; ?></span>
-                </div>
-                <div class="stats-item">
-                  <span class="stats-left">Total Content:</span>
-                  <span class="stats-right"><?php echo $stats["image_size"]; ?></span>
+                  <span class="stats-right"><?php echo $stats["image_count"]; ?> (<?php echo human_readable_filesize((int)$stats["image_size"]); ?>)</span>
                 </div>
               </div>
             </div> <!-- #statistics-section -->
